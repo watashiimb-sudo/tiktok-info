@@ -3,290 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Watashi Tool | Official</title>
+    <title>WATASHI TOOL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --accent: #ff3333;
-            --bg: #030303;
-            --card: rgba(255, 255, 255, 0.04);
-            --text: #ffffff;
-            --transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
-        }
+        :root { --primary: #ff0000; --bg: #0d0d0d; --card: #1a1a1a; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .container { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 450px; text-align: center; border: 1px solid #333; position: relative; }
+        
+        /* Language Selector */
+        .lang-box { position: absolute; top: 15px; right: 15px; display: flex; gap: 5px; }
+        .lang-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); cursor: pointer; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+        .lang-btn.active { background: var(--primary); color: #000; }
 
-        body {
-            margin: 0;
-            background: var(--bg);
-            background-image: radial-gradient(circle at center, #1e0808 0%, #030303 100%);
-            color: var(--text);
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow-y: auto;
-            perspective: 1200px;
-            padding: 20px 0;
-            const translations = {
-    ru: {
-        title: "WATASHI TOOL",
-        analyze: "АНАЛИЗИРОВАТЬ",
-        tip1: "💡 Используйте Topaz/Wink для качества.",
-        tip2: "📥 Загрузите видео для инъекции данных.",
-        tip3: "🌐 Загрузите в TikTok через браузер (ПК).",
-        country: "Страна:"
-    },
-    en: {
-        title: "WATASHI TOOL",
-        analyze: "ANALYZE",
-        tip1: "💡 Use Topaz/Wink for better quality.",
-        tip2: "📥 Upload video for data injection.",
-        tip3: "🌐 Upload to TikTok via browser (PC).",
-        country: "Country:"
-    }
-};
+        h1 { font-size: 2rem; letter-spacing: 5px; color: #fff; margin-bottom: 5px; }
+        .subtitle { color: #666; font-size: 0.8rem; margin-bottom: 25px; }
+        .subtitle b { color: var(--primary); }
 
-function setLanguage(lang) {
-    // Меняем активную кнопку
-    document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        input, button { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: none; box-sizing: border-box; font-size: 1rem; }
+        input { background: #262626; color: #fff; border: 1px solid #333; }
+        .main-btn { background: #fff; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .main-btn:hover { background: var(--primary); color: #fff; }
 
-    // Меняем текст (добавь ID нужным элементам в HTML)
-    document.querySelector('h1').innerText = translations[lang].title;
-    document.getElementById('analyze-btn').innerText = translations[lang].analyze;
-    document.getElementById('tip-quality').innerHTML = translations[lang].tip1;
-    document.getElementById('tip-upload').innerHTML = translations[lang].tip2;
-    document.getElementById('tip-browser').innerHTML = translations[lang].tip3;
-}
-        }
+        .results { background: #111; padding: 15px; border-radius: 15px; margin-top: 20px; text-align: left; }
+        .res-item { display: flex; justify-content: space-between; margin: 8px 0; font-size: 0.9rem; }
+        .res-item span:last-child { font-weight: bold; }
 
-        .container {
-            max-width: 440px;
-            width: 92%;
-            padding: 40px;
-            background: var(--card);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 35px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-            transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.2, 1, 0.2, 1);
-        }
-
-        .logo {
-            width: 70px;
-            height: 70px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            border: 2px solid var(--accent);
-            padding: 5px;
-            filter: drop-shadow(0 0 10px rgba(255, 51, 51, 0.4));
-        }
-
-        h1 {
-            font-size: 26px;
-            letter-spacing: 6px;
-            margin: 0 0 5px 0;
-            text-transform: uppercase;
-            font-weight: 900;
-        }
-
-        .disclaimer {
-            font-size: 10px;
-            color: #777;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-        }
-
-        .disclaimer span { color: var(--accent); font-weight: bold; }
-
-        /* Стили для новых блоков */
-        .section-title {
-            font-size: 12px;
-            color: var(--accent);
-            text-align: left;
-            margin-bottom: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        input[type="text"], input[type="file"] {
-            width: 100%;
-            padding: 15px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            color: #fff;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-            outline: none;
-        }
-
-        input[type="text"]:focus { border-color: var(--accent); }
-
-        .btn {
-            width: 100%;
-            padding: 18px;
-            background: #fff;
-            color: #000;
-            border: none;
-            border-radius: 18px;
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: var(--transition);
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-        }
-
-        .btn:hover {
-            background: var(--accent);
-            color: #fff;
-            transform: scale(1.02);
-            box-shadow: 0 15px 30px rgba(255, 51, 51, 0.4);
-        }
-
-        /* Блок информации о TikTok */
-        .info-card {
-            background: rgba(0,0,0,0.4);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-            text-align: left;
-            border: 1px solid rgba(255,255,255,0.05);
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn { from {opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
-
-        .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 13px; }
-        .info-label { color: #777; }
-        .info-value { color: #fff; font-weight: bold; }
-
-        #console {
-            background: #000;
-            border-radius: 16px;
-            padding: 15px;
-            text-align: left;
-            font-family: 'Consolas', monospace;
-            font-size: 11px;
-            color: #00ff00;
-            min-height: 60px;
-            margin-top: 15px;
-        }
-
-        .internal-link { font-size: 10px; color: #333; text-decoration: none; margin-top: 25px; display: block; }
+        .tips-box { margin-top: 25px; padding-top: 20px; border-top: 1px solid #333; text-align: left; font-size: 0.85rem; color: #999; }
+        .tips-box b { color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <div class="container" id="card">
-        <img src="/cat.png" alt="W" class="logo" onerror="this.src='https://placehold.co/70x70/000/ff3333?text=W'">
-        
-        <h1>WATASHI TOOL</h1>
-        <div class="disclaimer">
-            ВНИМАНИЕ: Этот инструмент <span>БЕСПЛАТНЫЙ</span>. Уважайте автора (<span>ваташи</span>).
-        </div>
-<div class="result-item">
-    <span>Страна:</span>
-    <span id="video-country">-</span>
-</div>
-        <!-- СЕКЦИЯ 1: TikTok Анализ -->
-        <div class="section-title">Анализ ссылки TikTok</div>
-        <input type="text" id="tk-url" placeholder="Вставьте ссылку на видео...">
-        <button class="btn" onclick="getTikTokInfo()">Анализировать</button>
-
-        <div id="tk-result" class="info-card">
-            <div class="info-row"><span class="info-label">Качество:</span> <span id="tk-quality" class="info-value">-</span></div>
-            <div class="info-row"><span class="info-label">FPS:</span> <span id="tk-fps" class="info-value">-</span></div>
-            <div class="info-row"><span class="info-label">Вес:</span> <span id="tk-size" class="info-value">-</span></div>
-        </div>
-
-        <div style="margin: 30px 0; border-bottom: 1px solid rgba(255,255,255,0.05);"></div>
-
-        <!-- СЕКЦИЯ 2: Инъекция (твой оригинальный код) -->
-        <div class="section-title">Инъекция метаданных</div>
-        <input type="file" id="vid-input" accept="video/mp4">
-        <button class="btn" onclick="processVideo()">Запустить инъекцию</button>
-
-        <div id="console" style="display:none;"></div>
-        
-        <a href="#" class="internal-link">Engine v3.5 | Official Build</a>
+<div class="container">
+    <div class="lang-box">
+        <button class="lang-btn active" onclick="changeLang('ru')" id="btn-ru">RU</button>
+        <button class="lang-btn" onclick="changeLang('en')" id="btn-en">EN</button>
     </div>
 
-    <script>
-        // Логика наклона карточки
-        const card = document.getElementById('card');
-        document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 60;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 60;
-            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
+    <h1 id="title">WATASHI TOOL</h1>
+    <p class="subtitle" id="sub">ВНИМАНИЕ: ИНСТРУМЕНТ <b>БЕСПЛАТНЫЙ</b>. АВТОР: <b>ВАТАШИ</b>.</p>
 
-        // Функция анализа (запрос к твоему Python серверу)
-        async function getTikTokInfo() {
-            const url = document.getElementById('tk-url').value;
-            const resCard = document.getElementById('tk-result');
-            if (!url) return alert("Вставь ссылку!");
+    <input type="text" id="link" placeholder="Вставьте ссылку на TikTok...">
+    <button class="main-btn" onclick="analyze()" id="btn-text">АНАЛИЗИРОВАТЬ</button>
 
-            try {
-                // Имитация загрузки
-                document.getElementById('tk-quality').innerText = "Загрузка...";
-                resCard.style.display = 'block';
+    <div class="results">
+        <div class="res-item"><span id="lbl-q">Качество:</span> <span id="res-q">-</span></div>
+        <div class="res-item"><span id="lbl-f">FPS:</span> <span id="res-f">-</span></div>
+        <div class="res-item"><span id="lbl-s">Вес:</span> <span id="res-s">-</span></div>
+        <div class="res-item"><span id="lbl-c">Страна:</span> <span id="res-c">-</span></div>
+    </div>
 
-                const response = await fetch(`https://tiktok-info-production-c7c2.up.railway.app/get_info?link=${encodeURIComponent(url)}`);
-                const data = await response.json();
+    <div class="tips-box">
+        <p id="t1">💡 Используйте <b>Topaz/Wink</b> для качества.</p>
+        <p id="t2">📥 Загрузите видео для <b>инъекции данных</b>.</p>
+        <p id="t3">🌐 Загрузите в TikTok через <b>браузер (ПК)</b>.</p>
+    </div>
+</div>
 
-                if (data.status === "success") {
-                    document.getElementById('tk-quality').innerText = data.quality;
-                    document.getElementById('tk-fps').innerText = data.fps;
-                    document.getElementById('tk-size').innerText = data.size;
-                } else {
-                    alert("Ошибка: " + data.message);
-                }
-            } catch (e) {
-                alert("Ошибка сервера. Убедись, что Python запущен.");
-            }
+<script>
+    const langData = {
+        ru: {
+            sub: "ВНИМАНИЕ: ИНСТРУМЕНТ <b>БЕСПЛАТНЫЙ</b>. АВТОР: <b>ВАТАШИ</b>.",
+            btn: "АНАЛИЗИРОВАТЬ",
+            q: "Качество:", f: "FPS:", s: "Вес:", c: "Страна:",
+            t1: "💡 Используйте <b>Topaz/Wink</b> для качества.",
+            t2: "📥 Загрузите видео для <b>инъекции данных</b>.",
+            t3: "🌐 Загрузите в TikTok через <b>браузер (ПК)</b>.",
+            load: "Загрузка..."
+        },
+        en: {
+            sub: "ATTENTION: <b>FREE</b> TOOL. BY <b>WATASHI</b>.",
+            btn: "ANALYZE",
+            q: "Quality:", f: "FPS:", s: "Size:", c: "Country:",
+            t1: "💡 Use <b>Topaz/Wink</b> for better quality.",
+            t2: "📥 Upload video for <b>data injection</b>.",
+            t3: "🌐 Upload to TikTok via <b>browser (PC)</b>.",
+            load: "Loading..."
         }
+    };
 
-        // Оригинальная логика инъекции байтов
-        async function processVideo() {
-            const input = document.getElementById('vid-input');
-            const consoleDiv = document.getElementById('console');
-            if (!input.files.length) return;
+    function changeLang(lang) {
+        document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        const d = langData[lang];
+        document.getElementById('sub').innerHTML = d.sub;
+        document.getElementById('btn-text').innerText = d.btn;
+        document.getElementById('lbl-q').innerText = d.q;
+        document.getElementById('lbl-f').innerText = d.f;
+        document.getElementById('lbl-s').innerText = d.s;
+        document.getElementById('lbl-c').innerText = d.c;
+        document.getElementById('t1').innerHTML = d.t1;
+        document.getElementById('t2').innerHTML = d.t2;
+        document.getElementById('t3').innerHTML = d.t3;
+    }
 
-            consoleDiv.style.display = 'block';
-            consoleDiv.innerHTML = "> Инициализация...";
+    async function analyze() {
+        const url = document.getElementById('link').value;
+        if(!url) return alert("Введите ссылку!");
+        
+        document.getElementById('res-q').innerText = "Загрузка...";
+        
+        try {
+            // ТВОЯ ССЫЛКА НА RAILWAY
+            const server = "https://tiktok-info-production-c7c2.up.railway.app";
+            const res = await fetch(`${server}/get_info?link=${encodeURIComponent(url)}`);
+            const data = await res.json();
             
-            const file = input.files[0];
-            const buffer = await file.arrayBuffer();
-            const bytes = new Uint8Array(buffer);
-            let count = 0;
-
-            for (let i = 0; i < bytes.length - 3; i++) {
-                if (bytes[i] === 0x65 && bytes[i+1] === 0x6C && bytes[i+2] === 0x73 && bytes[i+3] === 0x74) {
-                    count++;
-                    bytes[i + 8] = 0x10; bytes[i + 9] = 0x00; bytes[i + 10] = 0x00; bytes[i + 11] = 0x01;
-                }
-            }
-
-            consoleDiv.innerHTML += `<br>> Патчей наложено: ${count}`;
-            
-            if (count > 0) {
-                const blob = new Blob([bytes], { type: "video/mp4" });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = file.name.replace(".mp4", "_processed.mp4");
-                link.click();
-                consoleDiv.innerHTML += "<br>> Готово! Файл скачан.";
+            if(data.status === "success") {
+                document.getElementById('res-q').innerText = data.quality;
+                document.getElementById('res-f').innerText = data.fps;
+                document.getElementById('res-s').innerText = data.size;
+                document.getElementById('res-c').innerText = data.country;
             } else {
-                consoleDiv.innerHTML += "<br>> Метаданные не найдены.";
+                alert("Ошибка сервера!");
             }
+        } catch(e) {
+            alert("Ошибка! Проверь, запущен ли Python на Railway.");
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
