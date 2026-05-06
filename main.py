@@ -1,53 +1,33 @@
-import os
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import yt_dlp
+async function analyzeVideo() {
+    const link = document.getElementById('tk-link').value;
+    if(!link) return alert(curLang === 'ru' ? "Вставьте ссылку!" : "Paste link!");
+    
+    // Сброс и анимация загрузки
+    const fields = ['res-q', 'res-f', 'res-s', 'res-c'];
+    fields.forEach(id => document.getElementById(id).innerText = "...");
 
-app = Flask(__name__)
-CORS(app)
-
-@app.route('/get_info', methods=['GET'])
-def get_tiktok_info():
-    video_url = request.args.get('link')
-    if not video_url:
-        return jsonify({"status": "error", "message": "No URL provided"}), 400
-
-    try:
-        ydl_opts = {
-            'quiet': True, 
-            'no_warnings': True, 
-            'format': 'best',
-            'check_formats': True
-        }
+    try {
+        const res = await fetch(`https://tiktok-info-production-c7c2.up.railway.app/get_info?link=${encodeURIComponent(link)}`);
+        const data = await res.json();
         
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(video_url, download=False)
+        if(data.status === "success") {
+            // Заполнение данных с проверкой на пустоту
+            document.getElementById('res-q').innerText = data.quality || "720p";
+            document.getElementById('res-f').innerText = data.fps || "30";
+            document.getElementById('res-s').innerText = data.size || "MB";
             
-            # 1. Поиск страны/региона
-            country = info.get('location') or info.get('region') or info.get('country')
-            if not country:
-                country = "International"
-
-            # 2. Поиск FPS
-            fps = info.get('fps')
-            if not fps and 'formats' in info:
-                fps = next((f.get('fps') for f in info['formats'] if f.get('fps')), 60)
-
-            # 3. Поиск веса
-            filesize = info.get('filesize') or info.get('filesize_approx')
-            if not filesize and 'formats' in info:
-                filesize = next((f.get('filesize') or f.get('filesize_approx') for f in info['formats'] if f.get('filesize')), 0)
+            // ЛОГИКА ДЛЯ СТРАНЫ:
+            // Ищем в country, если нет — в region, если нет — пишем "Скрыто"
+            const region = data.country || data.region || data.author_location || (curLang === 'ru' ? "Скрыто" : "Hidden");
+            document.getElementById('res-c').innerText = region;
             
-            return jsonify({
-                "status": "success",
-                "quality": f"{info.get('width', '?')}x{info.get('height', '?')}",
-                "fps": int(fps) if fps else 60,
-                "size": f"{round(filesize / 1048576, 2)} MB" if filesize else "Unknown",
-                "country": country
-            })
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
+        } else {
+            alert(curLang === 'ru' ? "Ошибка: Данные не найдены" : "Error: Data not found");
+            fields.forEach(id => document.getElementById(id).innerText = "-");
+        }
+    } catch(e) { 
+        console.error("Ошибка API:", e);
+        alert(curLang === 'ru' ? "Сервер недоступен" : "Server offline");
+        fields.forEach(id => document.getElementById(id).innerText = "-");
+    }
+}
