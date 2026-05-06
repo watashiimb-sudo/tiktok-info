@@ -40,7 +40,7 @@ def get_tiktok_info():
                 filesize = next((f.get('filesize') or f.get('filesize_approx') for f in info['formats'] if f.get('filesize') or f.get('filesize_approx')), 0)
             
             # Подготавливаем красивые значения
-            final_fps = f"{int(fps)}" if fps else "60 (est.)"
+            final_fps = f"{int(fps)}" if fps else "60 (fps)"
             final_size = f"{round(filesize / 1048576, 2)} MB" if filesize else "Unknown"
 
             return jsonify({
