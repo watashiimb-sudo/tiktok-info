@@ -26,6 +26,6 @@ def get_tiktok_info():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
-    # Важно: порт берется из переменной окружения для Railway/Render
-    port = int(os.environ.get("PORT", 5000))
+    # Railway требует, чтобы сервер слушал адрес 0.0.0.0
+    port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
