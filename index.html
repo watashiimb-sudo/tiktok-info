@@ -40,19 +40,17 @@
             box-shadow: 0 40px 100px rgba(0,0,0,0.8);
             transform-style: preserve-3d;
             transition: transform 0.6s cubic-bezier(0.2, 1, 0.2, 1);
-            will-change: transform;
             position: relative;
         }
 
-        /* Заголовок с flex-макетом для выравнивания переключателя языков */
+        /* Шапка */
         .header-group {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        /* Столбец заголовка с логотипом W */
         .logo-and-title {
             display: flex;
             flex-direction: column;
@@ -60,158 +58,134 @@
             text-align: left;
         }
 
-        .w-logo-wrapper {
-            margin-bottom: 15px;
-            display: inline-block;
-        }
-
-        /* Светящийся красный квадрат с буквой W */
         .w-logo {
-            width: 70px;
-            height: 70px;
+            width: 60px;
+            height: 60px;
             background: rgba(255, 51, 51, 0.1);
             border: 2px solid var(--accent);
-            border-radius: 20px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 35px;
             font-weight: 900;
             color: var(--accent);
-            filter: drop-shadow(0 0 15px rgba(255, 51, 51, 0.7));
-            transition: var(--transition);
-        }
-
-        .w-logo:hover {
-            filter: drop-shadow(0 0 25px rgba(255, 51, 51, 1));
+            filter: drop-shadow(0 0 12px rgba(255, 51, 51, 0.6));
+            margin-bottom: 10px;
         }
 
         h1 {
-            font-size: 26px;
-            letter-spacing: 6px;
-            margin: 0 0 5px 0;
+            font-size: 24px;
+            letter-spacing: 4px;
+            margin: 0;
             text-transform: uppercase;
             font-weight: 900;
-            position: relative;
         }
 
-        /* Disclaimer об авторстве */
-        .disclaimer {
-            font-size: 10px;
-            color: #777;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0;
-        }
+        .disclaimer { font-size: 10px; color: #777; text-transform: uppercase; margin-top: 4px; }
+        .disclaimer span { color: var(--accent); font-weight: bold; }
 
-        .disclaimer span {
-            color: var(--accent);
-            font-weight: bold;
-        }
-
-        /* Переключатель языков */
-        .lang-switch {
+        /* Вкладки */
+        .tabs {
             display: flex;
-            justify-content: center;
-            gap: 12px;
+            gap: 10px;
+            margin: 20px 0;
         }
 
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
             color: #777;
-            padding: 8px 16px;
-            border-radius: 50px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 11px;
             font-weight: 800;
+            text-transform: uppercase;
             transition: var(--transition);
         }
 
-        .lang-btn.active {
+        .tab-btn.active {
             background: var(--accent);
             color: white;
-            box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.4);
         }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Список правил */
         .rules-list {
             text-align: left;
             background: rgba(0,0,0,0.3);
-            padding: 20px 20px 20px 40px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            font-size: 13px;
+            padding: 15px 15px 15px 35px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            font-size: 12px;
             color: #bbb;
             border: 1px solid rgba(255,255,255,0.05);
         }
-
         .rules-list li span { color: var(--accent); font-weight: bold; }
 
-        input[type="file"] {
+        input {
             width: 100%;
-            padding: 15px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
             color: #fff;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            outline: none;
         }
+
+        input:focus { border-color: var(--accent); }
 
         .btn {
             width: 100%;
-            padding: 20px;
+            padding: 18px;
             background: #fff;
             color: #000;
             border: none;
-            border-radius: 18px;
+            border-radius: 15px;
             font-weight: 900;
             text-transform: uppercase;
             cursor: pointer;
             transition: var(--transition);
-            letter-spacing: 2px;
         }
 
         .btn:hover {
             background: var(--accent);
             color: #fff;
-            transform: scale(1.02);
-            box-shadow: 0 15px 30px rgba(255, 51, 51, 0.4);
+            box-shadow: 0 10px 25px rgba(255, 51, 51, 0.4);
         }
 
-        .progress-wrapper {
-            margin-top: 25px;
-            display: none;
-        }
-
-        .progress-container {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #fff, var(--accent));
-            transition: width 0.4s ease;
-        }
-
-        #console {
-            background: #000;
-            border-radius: 16px;
+        /* Результаты анализа */
+        .results {
+            background: rgba(0,0,0,0.2);
             padding: 15px;
+            border-radius: 15px;
+            margin-top: 15px;
             text-align: left;
-            font-family: 'Consolas', monospace;
-            font-size: 11px;
-            color: #00ff00;
-            min-height: 80px;
         }
+        .res-item { display: flex; justify-content: space-between; font-size: 12px; margin: 8px 0; }
+        .res-item span:first-child { color: #555; }
 
-        .internal-link { font-size: 10px; color: #333; text-decoration: none; margin-top: 25px; display: block; }
+        /* Консоль и Прогресс */
+        .progress-wrapper { margin-top: 20px; }
+        .p-container { width: 100%; height: 5px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
+        .p-bar { width: 0%; height: 100%; background: var(--accent); transition: width 0.3s; }
+        #console { background: #000; padding: 12px; border-radius: 12px; font-family: monospace; font-size: 10px; color: #0f0; min-height: 60px; text-align: left; }
+
+        .lang-switch { display: flex; gap: 8px; }
+        .lang-btn { font-size: 10px; color: #555; cursor: pointer; font-weight: 800; padding: 5px 10px; border-radius: 8px; border: 1px solid transparent; }
+        .lang-btn.active { color: #fff; border-color: var(--accent); }
+
+        .footer-link { font-size: 10px; color: #333; text-decoration: none; margin-top: 25px; display: block; }
     </style>
 </head>
 <body>
@@ -219,11 +193,9 @@
     <div class="container" id="card">
         <div class="header-group">
             <div class="logo-and-title">
-                <div class="w-logo-wrapper">
-                    <div class="w-logo">W</div>
-                </div>
+                <div class="w-logo">W</div>
                 <h1>WATASHI TOOL</h1>
-                <div class="disclaimer" id="author-text">ATTENTION: <span>БЕСПЛАТНЫЙ</span>. Author (<span>ваташи</span>).</div>
+                <div class="disclaimer" id="author-text">ВНИМАНИЕ: <span>БЕСПЛАТНЫЙ</span>. Автор (<span>ваташи</span>).</div>
             </div>
             <div class="lang-switch">
                 <span class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</span>
@@ -231,127 +203,153 @@
             </div>
         </div>
 
-        <ul class="rules-list" id="rules"><li>Используйте <span>Topaz/Wink</span> для качества.</li>
-                        <li>Загрузите видео для <span>инъекции данных</span>.</li>
-                        <li>Загрузите в TikTok через <span>браузер (ПК)</span>.</li></ul>
+        <ul class="rules-list" id="rules">
+            <li>Используйте <span>Topaz/Wink</span> для качества.</li>
+            <li>Загрузите видео для <span>инъекции данных</span>.</li>
+            <li>Загрузите в TikTok через <span>браузер (ПК)</span>.</li>
+        </ul>
 
-        <input type="file" id="vid-input" accept="video/mp4">
-        <button class="btn" id="action-btn" onclick="processVideo()">Запустить процесс</button>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-inject')" id="t-btn-i">Изменение</button>
+            <button class="tab-btn" onclick="switchTab('tab-analyze')" id="t-btn-a">Анализ</button>
+        </div>
 
-        <div class="progress-wrapper" id="p-wrapper" style="display: none;">
-            <div class="progress-container">
-                <div class="progress-bar" id="p-bar" style="width: 0%;"></div>
+        <div id="tab-inject" class="tab-content active">
+            <input type="file" id="vid-input" accept="video/mp4">
+            <button class="btn" id="btn-i-main" onclick="processVideo()">Запустить процесс</button>
+            
+            <div class="progress-wrapper" id="p-wrapper" style="display: none;">
+                <div class="p-container"><div class="p-bar" id="p-bar"></div></div>
+                <div id="console"></div>
             </div>
-            <div id="console"></div>
+        </div>
+
+        <div id="tab-analyze" class="tab-content">
+            <input type="text" id="tk-link" placeholder="Вставьте ссылку на TikTok...">
+            <button class="btn" id="btn-a-main" onclick="analyzeVideo()">Анализировать</button>
+            <div class="results">
+                <div class="res-item"><span id="l-q">Качество:</span> <span id="res-q">-</span></div>
+                <div class="res-item"><span id="l-f">FPS:</span> <span id="res-f">-</span></div>
+                <div class="res-item"><span id="l-s">Вес:</span> <span id="res-s">-</span></div>
+                <div class="res-item"><span id="l-c">Страна:</span> <span id="res-c">-</span></div>
+            </div>
         </div>
         
-        <a href="https://wtsh-tiktok-fps.neocities.org/#" class="internal-link">Engine v3.2 | Official Build</a>
+        <a href="#" class="footer-link">Engine v3.2 | Official Build</a>
     </div>
 
     <script>
-        // --- Логика наклона ---
+        // Наклон карточки
         const card = document.getElementById('card');
         document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 60;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 60;
-            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            const x = (window.innerWidth / 2 - e.pageX) / 60;
+            const y = (window.innerHeight / 2 - e.pageY) / 60;
+            card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
         });
 
-        document.addEventListener('mouseleave', () => {
-            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-        });
+        // Переключение вкладок
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'tab-inject') document.getElementById('t-btn-i').classList.add('active');
+            else document.getElementById('t-btn-a').classList.add('active');
+        }
 
-        // --- Переключение языков ---
-        const translations = {
+        // Языки
+        const langData = {
             ru: {
-                author: 'ВНИМАНИЕ: Этот инструмент <span>БЕСПЛАТНЫЙ</span>. Уважайте автора (<span>ваташи</span>).',
-                rules: `<li>Используйте <span>Topaz/Wink</span> для качества.</li>
-                        <li>Загрузите видео для <span>инъекции данных</span>.</li>
-                        <li>Загрузите в TikTok через <span>браузер (ПК)</span>.</li>`,
-                btn: "Запустить процесс",
-                logs: ["Инициализация...", "Анализ видео...", "Получение данных...", "Исправление структуры...", "Патчи: ", "Сохранение...", "Готово!"]
+                author: 'ВНИМАНИЕ: Инструмент <span>БЕСПЛАТНЫЙ</span>. Автор (<span>ваташи</span>).',
+                rules: '<li>Используйте <span>Topaz/Wink</span> для качества.</li><li>Загрузите видео для <span>инъекции данных</span>.</li><li>Загрузите в TikTok через <span>браузер (ПК)</span>.</li>',
+                btnI: "Запустить процесс", btnA: "Анализировать",
+                tabI: "Изменение", tabA: "Анализ",
+                ph: "Вставьте ссылку на TikTok...",
+                q: "Качество:", f: "FPS:", s: "Вес:", c: "Страна:"
             },
             en: {
-                author: 'ATTENTION: This tool is <span>FREE</span>. Respect the author (<span>watashi</span>).',
-                rules: `<li>Use <span>Topaz/Wink</span> for quality.</li>
-                        <li>Upload video for <span>data injection</span>.</li>
-                        <li>Upload to TikTok via <span>browser (PC)</span>.</li>`,
-                btn: "Start Process",
-                logs: ["Initializing...", "Analyzing video...", "Receiving data...", "Fixing structure...", "Patches: ", "Saving...", "Complete!"]
+                author: 'ATTENTION: Tool is <span>FREE</span>. Author (<span>watashi</span>).',
+                rules: '<li>Use <span>Topaz/Wink</span> for quality.</li><li>Upload video for <span>data injection</span>.</li><li>Upload to TikTok via <span>browser (PC)</span>.</li>',
+                btnI: "Start Process", btnA: "Analyze Link",
+                tabI: "Modify", tabA: "Analyze",
+                ph: "Paste TikTok link...",
+                q: "Quality:", f: "FPS:", s: "Size:", c: "Country:"
             }
         };
 
-        let currentLang = 'ru';
-
-        function setLang(lang) {
-            currentLang = lang;
-            document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
-            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            document.getElementById('author-text').innerHTML = translations[lang].author;
-            document.getElementById('rules').innerHTML = translations[lang].rules;
-            document.getElementById('action-btn').innerText = translations[lang].btn;
+        let curLang = 'ru';
+        function setLang(l) {
+            curLang = l;
+            document.getElementById('btn-ru').classList.toggle('active', l==='ru');
+            document.getElementById('btn-en').classList.toggle('active', l==='en');
+            const d = langData[l];
+            document.getElementById('author-text').innerHTML = d.author;
+            document.getElementById('rules').innerHTML = d.rules;
+            document.getElementById('btn-i-main').innerText = d.btnI;
+            document.getElementById('btn-a-main').innerText = d.btnA;
+            document.getElementById('t-btn-i').innerText = d.tabI;
+            document.getElementById('t-btn-a').innerText = d.tabA;
+            document.getElementById('tk-link').placeholder = d.ph;
+            document.getElementById('l-q').innerText = d.q;
+            document.getElementById('l-f').innerText = d.f;
+            document.getElementById('l-s').innerText = d.s;
+            document.getElementById('l-c').innerText = d.c;
         }
 
-        // --- Обработка видео ---
-        function addLog(text) {
-            const consoleDiv = document.getElementById('console');
-            const entry = document.createElement('div');
-            entry.innerText = `> ${text}`;
-            consoleDiv.appendChild(entry);
-            consoleDiv.scrollTop = consoleDiv.scrollHeight;
-        }
-
+        // Логика Изменения (Инъекция)
         async function processVideo() {
             const input = document.getElementById('vid-input');
-            if (!input.files.length) return;
-
-            const file = input.files[0];
+            if(!input.files.length) return alert("Файл не выбран!");
+            
             const wrapper = document.getElementById('p-wrapper');
             const pBar = document.getElementById('p-bar');
-            const consoleDiv = document.getElementById('console');
+            const consoleBox = document.getElementById('console');
             
             wrapper.style.display = 'block';
-            consoleDiv.innerHTML = '';
-            
-            const logs = translations[currentLang].logs;
-            const sleep = ms => new Promise(r => setTimeout(r, ms));
+            consoleBox.innerHTML = "> Инициализация...";
+            pBar.style.width = "30%";
 
-            addLog(logs[0]); pBar.style.width = '20%'; await sleep(600);
-            addLog(logs[1]); pBar.style.width = '40%'; await sleep(800);
+            const file = input.files[0];
+            const buffer = await file.arrayBuffer();
+            const bytes = new Uint8Array(buffer);
+            let count = 0;
 
-            try {
-                const buffer = await file.arrayBuffer();
-                const bytes = new Uint8Array(buffer);
-                let count = 0;
-
-                // Изменение байтов elst
-                for (let i = 0; i < bytes.length - 3; i++) {
-                    if (bytes[i] === 0x65 && bytes[i+1] === 0x6C && bytes[i+2] === 0x73 && bytes[i+3] === 0x74) {
-                        count++;
-                        bytes[i + 8] = 0x10; bytes[i + 9] = 0x00; bytes[i + 10] = 0x00; bytes[i + 11] = 0x01;
-                    }
+            for (let i = 0; i < bytes.length - 3; i++) {
+                if (bytes[i] === 0x65 && bytes[i+1] === 0x6C && bytes[i+2] === 0x73 && bytes[i+3] === 0x74) {
+                    count++;
+                    bytes[i + 8] = 0x10; bytes[i + 9] = 0x00; bytes[i + 10] = 0x00; bytes[i + 11] = 0x01;
                 }
+            }
 
-                addLog(logs[2]); pBar.style.width = '60%'; await sleep(500);
-                addLog(logs[3]); pBar.style.width = '80%'; await sleep(700);
-                addLog(`${logs[4]} ${count}`); await sleep(400);
-
-                if (count > 0) {
+            setTimeout(() => {
+                pBar.style.width = "100%";
+                consoleBox.innerHTML += `<br>> Патчи: ${count}<br>> Успешно завершено!`;
+                if(count > 0) {
                     const blob = new Blob([bytes], { type: "video/mp4" });
                     const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = file.name.replace(".mp4", "_60fps.mp4");
-                    link.click();
-                    pBar.style.width = '100%'; await sleep(300);
-                    addLog(logs[6]);
-                } else {
-                    addLog("No metadata atoms found.");
-                    pBar.style.width = '100%';
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "WATASHI_FIX_" + file.name;
+                    a.click();
                 }
-            } catch (e) {
-                addLog("An error occurred during injection.");
-            }
+            }, 1000);
+        }
+
+        // Логика Анализа
+        async function analyzeVideo() {
+            const link = document.getElementById('tk-link').value;
+            if(!link) return alert("Введите ссылку!");
+            
+            document.getElementById('res-q').innerText = "...";
+            try {
+                const res = await fetch(`https://tiktok-info-production-c7c2.up.railway.app/get_info?link=${encodeURIComponent(link)}`);
+                const data = await res.json();
+                if(data.status === "success") {
+                    document.getElementById('res-q').innerText = data.quality;
+                    document.getElementById('res-f').innerText = data.fps;
+                    document.getElementById('res-s').innerText = data.size;
+                    document.getElementById('res-c').innerText = data.country;
+                }
+            } catch(e) { alert("Ошибка сервера!"); }
         }
     </script>
 </body>
