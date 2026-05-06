@@ -13,21 +13,27 @@ def get_tiktok_info():
         return jsonify({"status": "error", "message": "No URL provided"}), 400
 
     try:
-        ydl_opts = {'quiet': True, 'no_warnings': True, 'format': 'best'}
+        ydl_opts = {
+            'quiet': True, 
+            'no_warnings': True, 
+            'format': 'best',
+            'check_formats': True
+        }
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
             
-            # Извлекаем страну/регион
+            # 1. Поиск страны/региона
             country = info.get('location') or info.get('region') or info.get('country')
-            if not country and 'webpage_url_domain' in info:
-                # Если TikTok не дал страну, попробуем угадать по домену или оставить N/A
-                country = "Global/TikTok"
+            if not country:
+                country = "International"
 
+            # 2. Поиск FPS
             fps = info.get('fps')
             if not fps and 'formats' in info:
                 fps = next((f.get('fps') for f in info['formats'] if f.get('fps')), 60)
 
+            # 3. Поиск веса
             filesize = info.get('filesize') or info.get('filesize_approx')
             if not filesize and 'formats' in info:
                 filesize = next((f.get('filesize') or f.get('filesize_approx') for f in info['formats'] if f.get('filesize')), 0)
@@ -37,7 +43,7 @@ def get_tiktok_info():
                 "quality": f"{info.get('width', '?')}x{info.get('height', '?')}",
                 "fps": int(fps) if fps else 60,
                 "size": f"{round(filesize / 1048576, 2)} MB" if filesize else "Unknown",
-                "country": country if country else "International"
+                "country": country
             })
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
