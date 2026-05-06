@@ -6,7 +6,7 @@
     <title>Watashi Tool | Official</title>
     <style>
         :root {
-            --accent: #000000; /* Черный акцент */
+            --accent: #000000;
             --bg: #030303;
             --card: rgba(255, 255, 255, 0.04);
             --text: #ffffff;
@@ -23,8 +23,11 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
         }
+
+        .fade-out { opacity: 0; transform: translateY(-5px); transition: 0.3s; }
+        .fade-in { opacity: 1; transform: translateY(0); transition: 0.3s; }
 
         .container {
             max-width: 440px;
@@ -34,12 +37,31 @@
             backdrop-filter: blur(30px);
             border-radius: 35px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center; /* Всё по центру */
+            text-align: center;
             box-shadow: 0 40px 100px rgba(0,0,0,0.8);
             position: relative;
         }
 
-        /* Центрированная шапка */
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+        }
+        .lang-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #555;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 800;
+            transition: 0.3s;
+        }
+        .lang-btn.active { background: #fff; color: #000; }
+
         .header-group {
             display: flex;
             flex-direction: column;
@@ -50,7 +72,7 @@
         .w-logo {
             width: 65px;
             height: 65px;
-            background: #ffffff; /* Белый фон для черной буквы */
+            background: #ffffff;
             border: 2px solid #000;
             border-radius: 20px;
             display: flex;
@@ -58,24 +80,28 @@
             justify-content: center;
             font-size: 38px;
             font-weight: 900;
-            color: #000000; /* Черная W */
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            color: #000000;
             margin-bottom: 15px;
         }
 
-        h1 {
-            font-size: 24px;
-            letter-spacing: 5px;
-            margin: 0;
-            text-transform: uppercase;
-            font-weight: 900;
-        }
-
+        h1 { font-size: 24px; letter-spacing: 5px; margin: 0; text-transform: uppercase; font-weight: 900; }
         .disclaimer { font-size: 10px; color: #666; text-transform: uppercase; margin-top: 8px; }
-        .disclaimer span { color: #fff; font-weight: bold; }
 
-        /* Вкладки */
-        .tabs { display: flex; gap: 10px; margin: 25px 0; }
+        /* Блок инструкций в рамке */
+        .info-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #bbb;
+            text-align: center;
+        }
+        .info-box b { color: #fff; }
+
+        .tabs { display: flex; gap: 10px; margin: 20px 0; }
         .tab-btn {
             flex: 1;
             padding: 12px;
@@ -89,12 +115,7 @@
             text-transform: uppercase;
             transition: var(--transition);
         }
-
-        .tab-btn.active {
-            background: #ffffff;
-            color: #000;
-            border-color: #ffffff;
-        }
+        .tab-btn.active { background: #ffffff; color: #000; }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
@@ -127,29 +148,14 @@
             transition: var(--transition);
         }
 
-        .btn:hover { transform: scale(1.02); background: #f0f0f0; }
-
-        /* Результаты анализа (Центрированные) */
-        .results { 
-            background: rgba(0,0,0,0.3); 
-            padding: 20px; 
-            border-radius: 20px; 
-            margin-top: 15px; 
-        }
-        .res-item { 
-            display: flex; 
-            justify-content: space-between; 
-            font-size: 13px; 
-            margin: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 5px;
-        }
+        .results { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 20px; margin-top: 15px; }
+        .res-item { display: flex; justify-content: space-between; font-size: 13px; margin: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
         .res-item span:first-child { color: #888; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; }
 
         .progress-wrapper { margin-top: 20px; }
         .p-container { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; margin-bottom: 10px; }
         .p-bar { width: 0%; height: 100%; background: #fff; transition: width 0.3s; }
-        #console { background: #000; padding: 12px; border-radius: 12px; font-family: monospace; font-size: 10px; color: #fff; min-height: 50px; text-align: left; opacity: 0.7; }
+        #console { background: #000; padding: 15px; border-radius: 12px; font-family: 'Courier New', monospace; font-size: 11px; color: #fff; min-height: 100px; text-align: left; line-height: 1.5; opacity: 0.8; }
 
         .footer-link { font-size: 10px; color: #444; text-decoration: none; margin-top: 30px; display: block; letter-spacing: 2px; }
     </style>
@@ -157,20 +163,31 @@
 <body>
 
     <div class="container">
+        <div class="lang-switch">
+            <button class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</button>
+            <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+        </div>
+
         <div class="header-group">
             <div class="w-logo">W</div>
             <h1>WATASHI TOOL</h1>
-            <div class="disclaimer">Engine: <span>v3.5</span> | Dev: <span>ваташи</span></div>
+            <div class="disclaimer" id="txt-disc">Engine: <span>v3.5</span> | Dev: <span>ваташи</span></div>
+        </div>
+
+        <div class="info-box" id="info-box">
+            Используйте <b>Topaz/Wink</b> для качества.<br>
+            Загрузите видео для <b>инъекции данных</b>.<br>
+            Загрузите в TikTok через <b>браузер (ПК)</b>.
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('tab-inject')" id="t-btn-i">Изменение</button>
-            <button class="tab-btn" onclick="switchTab('tab-analyze')" id="t-btn-a">Анализ</button>
+            <button class="tab-btn active" onclick="switchTab('tab-inject')" id="tab-i-btn">Изменение</button>
+            <button class="tab-btn" onclick="switchTab('tab-analyze')" id="tab-a-btn">Анализ</button>
         </div>
 
         <div id="tab-inject" class="tab-content active">
             <input type="file" id="vid-input" accept="video/mp4">
-            <button class="btn" onclick="processVideo()">Inject Data</button>
+            <button class="btn" id="btn-inject" onclick="processVideo()">Inject Data</button>
             <div class="progress-wrapper" id="p-wrapper" style="display: none;">
                 <div class="p-container"><div class="p-bar" id="p-bar"></div></div>
                 <div id="console"></div>
@@ -179,11 +196,11 @@
 
         <div id="tab-analyze" class="tab-content">
             <input type="text" id="tk-link" placeholder="Ссылка на видео...">
-            <button class="btn" onclick="analyzeVideo()">Get Info</button>
+            <button class="btn" id="btn-analyze" onclick="analyzeVideo()">Get Info</button>
             <div class="results">
-                <div class="res-item"><span>Качество</span> <span id="res-q">-</span></div>
-                <div class="res-item"><span>FPS</span> <span id="res-f">-</span></div>
-                <div class="res-item"><span>Размер</span> <span id="res-s">-</span></div>
+                <div class="res-item"><span id="lbl-q">Качество</span> <span id="res-q">-</span></div>
+                <div class="res-item"><span id="lbl-f">FPS</span> <span id="res-f">-</span></div>
+                <div class="res-item"><span id="lbl-s">Размер</span> <span id="res-s">-</span></div>
             </div>
         </div>
         
@@ -191,6 +208,68 @@
     </div>
 
     <script>
+        let curLang = 'ru';
+
+        const translations = {
+            ru: {
+                disc: "Engine: <span>v3.5</span> | Dev: <span>ваташи</span>",
+                info: "Используйте <b>Topaz/Wink</b> для качества.<br>Загрузите видео для <b>инъекции данных</b>.<br>Загрузите в TikTok через <b>браузер (ПК)</b>.",
+                tabI: "Изменение",
+                tabA: "Анализ",
+                btnInject: "Inject Data",
+                btnAnalyze: "Get Info",
+                lblQ: "Качество",
+                lblF: "FPS",
+                lblS: "Размер",
+                phAnalyze: "Ссылка на видео...",
+                errFile: "Выберите файл!",
+                done: "Готово!"
+            },
+            en: {
+                disc: "Engine: <span>v3.5</span> | Dev: <span>watashi</span>",
+                info: "Use <b>Topaz/Wink</b> for quality.<br>Upload video for <b>data injection</b>.<br>Upload to TikTok via <b>browser (PC)</b>.",
+                tabI: "Modify",
+                tabA: "Analyze",
+                btnInject: "Inject Data",
+                btnAnalyze: "Get Info",
+                lblQ: "Quality",
+                lblF: "FPS",
+                lblS: "Size",
+                phAnalyze: "Video link...",
+                errFile: "Select a file!",
+                done: "Complete!"
+            }
+        };
+
+        function setLang(lang) {
+            if (lang === curLang) return;
+            curLang = lang;
+
+            const container = document.querySelector('.container');
+            container.classList.add('fade-out');
+            
+            setTimeout(() => {
+                document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
+                document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+                const t = translations[lang];
+                document.getElementById('txt-disc').innerHTML = t.disc;
+                document.getElementById('info-box').innerHTML = t.info;
+                document.getElementById('tab-i-btn').innerText = t.tabI;
+                document.getElementById('tab-a-btn').innerText = t.tabA;
+                document.getElementById('btn-inject').innerText = t.btnInject;
+                document.getElementById('btn-analyze').innerText = t.btnAnalyze;
+                document.getElementById('lbl-q').innerText = t.lblQ;
+                document.getElementById('lbl-f').innerText = t.lblF;
+                document.getElementById('lbl-s').innerText = t.lblS;
+                document.getElementById('tk-link').placeholder = t.phAnalyze;
+
+                container.classList.remove('fade-out');
+                container.classList.add('fade-in');
+                setTimeout(() => container.classList.remove('fade-in'), 300);
+            }, 300);
+        }
+
         function switchTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -198,37 +277,52 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Стабильный Инъектор (Без крашей)
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+
         async function processVideo() {
             const input = document.getElementById('vid-input');
-            if (!input.files.length) return alert("Выберите файл!");
+            if (!input.files.length) return alert(translations[curLang].errFile);
             
             const pBar = document.getElementById('p-bar');
             const consoleBox = document.getElementById('console');
             document.getElementById('p-wrapper').style.display = 'block';
             
-            consoleBox.innerHTML = "> Инициализация...";
-            pBar.style.width = "20%";
+            consoleBox.innerHTML = ""; 
+            pBar.style.width = "0%";
 
             try {
+                consoleBox.innerHTML += `> Initializing...<br>`;
+                pBar.style.width = "10%"; await sleep(400);
+
+                consoleBox.innerHTML += `> Analyzing video...<br>`;
+                pBar.style.width = "30%"; await sleep(600);
+
                 const file = input.files[0];
                 const buffer = await file.arrayBuffer();
                 const bytes = new Uint8Array(buffer);
                 let count = 0;
 
-                await new Promise(r => setTimeout(r, 100)); // Даем браузеру "вздохнуть"
+                consoleBox.innerHTML += `> Receiving data...<br>`;
+                pBar.style.width = "50%"; await sleep(500);
 
+                consoleBox.innerHTML += `> Fixing structure...<br>`;
+                pBar.style.width = "75%";
+                
                 const len = bytes.length - 12;
                 for (let i = 0; i < len; i++) {
                     if (bytes[i] === 0x65 && bytes[i+1] === 0x6C && bytes[i+2] === 0x73 && bytes[i+3] === 0x74) {
                         count++;
                         bytes[i + 8] = 0x10; bytes[i + 9] = 0x00; bytes[i + 10] = 0x00; bytes[i + 11] = 0x01;
-                        if (count % 400 === 0) await new Promise(r => setTimeout(r, 0));
+                        if (count % 400 === 0) await sleep(0);
                     }
                 }
+                await sleep(500);
 
+                consoleBox.innerHTML += `> Patches: ${count}<br>`;
+                pBar.style.width = "90%"; await sleep(400);
+
+                consoleBox.innerHTML += `> ${translations[curLang].done}<br>`;
                 pBar.style.width = "100%";
-                consoleBox.innerHTML += `<br>> Патчи: ${count}<br>> Готово!`;
 
                 if (count > 0) {
                     const blob = new Blob([bytes], { type: "video/mp4" });
@@ -238,31 +332,26 @@
                     a.click();
                 }
             } catch (e) {
-                alert("Ошибка памяти. Файл слишком большой.");
+                consoleBox.innerHTML += `> [ERROR] Memory limit reached.<br>`;
             }
         }
 
-        // Анализ (Только Качество, FPS, Вес)
         async function analyzeVideo() {
             const link = document.getElementById('tk-link').value;
             if(!link) return;
-            
             const ids = ['res-q', 'res-f', 'res-s'];
             ids.forEach(id => document.getElementById(id).innerText = "...");
 
             try {
                 const res = await fetch(`https://tiktok-info-production-c7c2.up.railway.app/get_info?link=${encodeURIComponent(link)}`);
                 const data = await res.json();
-                
                 if (data.status === "success") {
                     document.getElementById('res-q').innerText = data.quality || "1080p";
                     document.getElementById('res-f').innerText = data.fps || "60";
-                    document.getElementById('res-s').innerText = data.size || "Unknown";
-                } else {
-                    ids.forEach(id => document.getElementById(id).innerText = "Error");
+                    document.getElementById('res-s').innerText = data.size || "MB";
                 }
             } catch(e) {
-                ids.forEach(id => document.getElementById(id).innerText = "OFFLINE");
+                ids.forEach(id => document.getElementById(id).innerText = "Err");
             }
         }
     </script>
