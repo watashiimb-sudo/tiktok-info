@@ -30,7 +30,7 @@ def get_tiktok_info():
             # Если в главном поле пусто, лезем в список форматов
             if not fps and 'formats' in info:
                 # Фильтруем форматы, у которых есть число FPS, и берем самое высокое
-                fps_list = [f.get('fps') for f in info['formats'] if f.get('fps') is not None]
+                final_fps = f"{int(fps)}" if fps else "60" is not None]
                 if fps_list:
                     fps = max(fps_list)
 
