@@ -1,5 +1,0 @@
-[phases.setup]
-nixPkgs = ["python3", "yt-dlp"]
-
-[start]
-cmd = "node server.js"
