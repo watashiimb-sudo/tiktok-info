@@ -26,6 +26,37 @@
             overflow-y: auto;
             perspective: 1200px;
             padding: 20px 0;
+            const translations = {
+    ru: {
+        title: "WATASHI TOOL",
+        analyze: "АНАЛИЗИРОВАТЬ",
+        tip1: "💡 Используйте Topaz/Wink для качества.",
+        tip2: "📥 Загрузите видео для инъекции данных.",
+        tip3: "🌐 Загрузите в TikTok через браузер (ПК).",
+        country: "Страна:"
+    },
+    en: {
+        title: "WATASHI TOOL",
+        analyze: "ANALYZE",
+        tip1: "💡 Use Topaz/Wink for better quality.",
+        tip2: "📥 Upload video for data injection.",
+        tip3: "🌐 Upload to TikTok via browser (PC).",
+        country: "Country:"
+    }
+};
+
+function setLanguage(lang) {
+    // Меняем активную кнопку
+    document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+    // Меняем текст (добавь ID нужным элементам в HTML)
+    document.querySelector('h1').innerText = translations[lang].title;
+    document.getElementById('analyze-btn').innerText = translations[lang].analyze;
+    document.getElementById('tip-quality').innerHTML = translations[lang].tip1;
+    document.getElementById('tip-upload').innerHTML = translations[lang].tip2;
+    document.getElementById('tip-browser').innerHTML = translations[lang].tip3;
+}
         }
 
         .container {
