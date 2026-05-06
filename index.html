@@ -4,283 +4,355 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Watashi Tool | Official</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --accent: #ff3333;
             --bg: #030303;
             --card: rgba(255, 255, 255, 0.04);
             --text: #ffffff;
-            --transition: all 0.4s cubic-bezier(0.2, 1, 0.2, 1);
+            --transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
         }
 
         body {
             margin: 0;
             background: var(--bg);
             background-image: radial-gradient(circle at center, #1e0808 0%, #030303 100%);
-            background-attachment: fixed;
             color: var(--text);
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
             overflow: hidden;
             perspective: 1200px;
         }
 
         .container {
-            width: 100%;
-            max-width: 480px;
+            max-width: 440px;
+            width: 92%;
             padding: 40px;
             background: var(--card);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 32px;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-radius: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.9);
-            transition: transform 0.1s ease-out;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.2, 1, 0.2, 1);
+            will-change: transform;
             position: relative;
         }
 
-        /* Логотип W */
-        .logo-w {
-            width: 40px;
-            height: 40px;
-            background: #000;
-            color: #fff;
-            border-radius: 50%;
+        /* Заголовок с flex-макетом для выравнивания переключателя языков */
+        .header-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        /* Столбец заголовка с логотипом W */
+        .logo-and-title {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .w-logo-wrapper {
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        /* Светящийся красный квадрат с буквой W */
+        .w-logo {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 51, 51, 0.1);
+            border: 2px solid var(--accent);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 800;
-            font-size: 20px;
-            margin: 0 auto 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--accent);
+            filter: drop-shadow(0 0 15px rgba(255, 51, 51, 0.7));
+            transition: var(--transition);
         }
 
-        .lang-box { position: absolute; top: 25px; right: 25px; display: flex; gap: 8px; z-index: 10; }
+        .w-logo:hover {
+            filter: drop-shadow(0 0 25px rgba(255, 51, 51, 1));
+        }
+
+        h1 {
+            font-size: 26px;
+            letter-spacing: 6px;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+            font-weight: 900;
+            position: relative;
+        }
+
+        /* Disclaimer об авторстве */
+        .disclaimer {
+            font-size: 10px;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+        }
+
+        .disclaimer span {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Переключатель языков */
+        .lang-switch {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
         .lang-btn {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 51, 51, 0.2);
-            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #777;
+            padding: 8px 16px;
+            border-radius: 50px;
             cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 10px;
             font-size: 11px;
             font-weight: 800;
             transition: var(--transition);
         }
-        .lang-btn.active { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(255, 51, 51, 0.3); }
 
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin: 0;
-            background: linear-gradient(180deg, #fff 0%, #888 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
+        .lang-btn.active {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
         }
 
-        .subtitle { color: #666; font-size: 0.8rem; margin: 8px 0 25px; text-transform: uppercase; letter-spacing: 2px; }
-        .subtitle b { color: var(--accent); }
-
-        /* Вкладки: Изменение слева, Анализ справа */
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
-        .tab-btn {
-            flex: 1;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            color: #777;
-            border-radius: 16px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            transition: var(--transition);
-        }
-        .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
-
-        .tab-content { display: none; animation: fadeIn 0.4s ease-out; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        input, .main-btn {
-            width: 100%;
-            padding: 18px;
-            border-radius: 16px;
-            border: none;
-            box-sizing: border-box;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        input { background: rgba(255, 255, 255, 0.03); color: #fff; border: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 15px; }
-        input:focus { border-color: var(--accent); outline: none; background: rgba(255, 255, 255, 0.06); }
-        
-        .main-btn { background: #fff; color: #000; font-weight: 700; cursor: pointer; text-transform: uppercase; }
-        .main-btn:hover { background: var(--accent); color: #fff; transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255, 51, 51, 0.4); }
-
-        .results { background: rgba(0, 0, 0, 0.2); padding: 20px; border-radius: 20px; margin-top: 15px; text-align: left; }
-        .res-item { display: flex; justify-content: space-between; margin: 10px 0; font-size: 0.9rem; }
-        .res-item span:first-child { color: #555; }
-
-        .tips-box {
-            margin-top: 30px;
-            padding-top: 25px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        /* Список правил */
+        .rules-list {
             text-align: left;
-            font-size: 0.8rem;
-            color: #555;
-            line-height: 1.8;
+            background: rgba(0,0,0,0.3);
+            padding: 20px 20px 20px 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            font-size: 13px;
+            color: #bbb;
+            border: 1px solid rgba(255,255,255,0.05);
         }
-        .tips-box b { color: #999; }
+
+        .rules-list li span { color: var(--accent); font-weight: bold; }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 20px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 2px;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(255, 51, 51, 0.4);
+        }
+
+        .progress-wrapper {
+            margin-top: 25px;
+            display: none;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #fff, var(--accent));
+            transition: width 0.4s ease;
+        }
+
+        #console {
+            background: #000;
+            border-radius: 16px;
+            padding: 15px;
+            text-align: left;
+            font-family: 'Consolas', monospace;
+            font-size: 11px;
+            color: #00ff00;
+            min-height: 80px;
+        }
+
+        .internal-link { font-size: 10px; color: #333; text-decoration: none; margin-top: 25px; display: block; }
     </style>
 </head>
 <body>
 
-<div class="container" id="card">
-    <div class="lang-box">
-        <button class="lang-btn active" onclick="setLang('ru')" id="btn-ru">RU</button>
-        <button class="lang-btn" onclick="setLang('en')" id="btn-en">EN</button>
-    </div>
-
-    <div class="logo-w">W</div>
-    <h1>WATASHI TOOL</h1>
-    <p class="subtitle" id="sub">FREE TOOL / BY <b>WATASHI</b></p>
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab('tab-inject')" id="btn-tab-i">Изменение</button>
-        <button class="tab-btn" onclick="openTab('tab-analyze')" id="btn-tab-a">Анализ</button>
-    </div>
-
-    <div id="tab-inject" class="tab-content active">
-        <input type="file" id="vid-file" accept="video/mp4">
-        <button class="main-btn" onclick="inject()" id="btn-i-text">Изменить видео</button>
-    </div>
-
-    <div id="tab-analyze" class="tab-content">
-        <input type="text" id="tk-link" placeholder="Вставьте ссылку на TikTok...">
-        <button class="main-btn" onclick="analyze()" id="btn-a-text">Анализировать</button>
-        <div class="results">
-            <div class="res-item"><span id="l-q">Качество:</span> <span id="r-q">-</span></div>
-            <div class="res-item"><span id="l-f">FPS:</span> <span id="r-f">-</span></div>
-            <div class="res-item"><span id="l-s">Вес:</span> <span id="r-s">-</span></div>
-            <div class="res-item"><span id="l-c">Страна:</span> <span id="r-c">-</span></div>
+    <div class="container" id="card">
+        <div class="header-group">
+            <div class="logo-and-title">
+                <div class="w-logo-wrapper">
+                    <div class="w-logo">W</div>
+                </div>
+                <h1>WATASHI TOOL</h1>
+                <div class="disclaimer" id="author-text">ATTENTION: <span>БЕСПЛАТНЫЙ</span>. Author (<span>ваташи</span>).</div>
+            </div>
+            <div class="lang-switch">
+                <span class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</span>
+                <span class="lang-btn" id="btn-en" onclick="setLang('en')">EN</span>
+            </div>
         </div>
+
+        <ul class="rules-list" id="rules"><li>Используйте <span>Topaz/Wink</span> для качества.</li>
+                        <li>Загрузите видео для <span>инъекции данных</span>.</li>
+                        <li>Загрузите в TikTok через <span>браузер (ПК)</span>.</li></ul>
+
+        <input type="file" id="vid-input" accept="video/mp4">
+        <button class="btn" id="action-btn" onclick="processVideo()">Запустить процесс</button>
+
+        <div class="progress-wrapper" id="p-wrapper" style="display: none;">
+            <div class="progress-container">
+                <div class="progress-bar" id="p-bar" style="width: 0%;"></div>
+            </div>
+            <div id="console"></div>
+        </div>
+        
+        <a href="https://wtsh-tiktok-fps.neocities.org/#" class="internal-link">Engine v3.2 | Official Build</a>
     </div>
 
-    <div class="tips-box">
-        <p id="t1">💡 Используйте <b>Topaz/Wink</b> для качества.</p>
-        <p id="t2">📥 Загрузите видео для <b>инъекции данных</b>.</p>
-        <p id="t3">🌐 Загрузите в TikTok через <b>браузер (ПК)</b>.</p>
-    </div>
-</div>
+    <script>
+        // --- Логика наклона ---
+        const card = document.getElementById('card');
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 60;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 60;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
 
-<script>
-    // 1. ПАРАЛЛАКС ЭФФЕКТ
-    const card = document.getElementById('card');
-    document.addEventListener('mousemove', (e) => {
-        const x = (window.innerWidth / 2 - e.pageX) / 50;
-        const y = (window.innerHeight / 2 - e.pageY) / 50;
-        card.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
-    });
+        document.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
 
-    // 2. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
-    function openTab(id) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        if(id === 'tab-inject') document.getElementById('btn-tab-i').classList.add('active');
-        else document.getElementById('btn-tab-a').classList.add('active');
-    }
+        // --- Переключение языков ---
+        const translations = {
+            ru: {
+                author: 'ВНИМАНИЕ: Этот инструмент <span>БЕСПЛАТНЫЙ</span>. Уважайте автора (<span>ваташи</span>).',
+                rules: `<li>Используйте <span>Topaz/Wink</span> для качества.</li>
+                        <li>Загрузите видео для <span>инъекции данных</span>.</li>
+                        <li>Загрузите в TikTok через <span>браузер (ПК)</span>.</li>`,
+                btn: "Запустить процесс",
+                logs: ["Инициализация...", "Анализ видео...", "Получение данных...", "Исправление структуры...", "Патчи: ", "Сохранение...", "Готово!"]
+            },
+            en: {
+                author: 'ATTENTION: This tool is <span>FREE</span>. Respect the author (<span>watashi</span>).',
+                rules: `<li>Use <span>Topaz/Wink</span> for quality.</li>
+                        <li>Upload video for <span>data injection</span>.</li>
+                        <li>Upload to TikTok via <span>browser (PC)</span>.</li>`,
+                btn: "Start Process",
+                logs: ["Initializing...", "Analyzing video...", "Receiving data...", "Fixing structure...", "Patches: ", "Saving...", "Complete!"]
+            }
+        };
 
-    // 3. ПЕРЕКЛЮЧЕНИЕ ЯЗЫКОВ
-    const langMap = {
-        ru: {
-            sub: "БЕСПЛАТНЫЙ ИНСТРУМЕНТ / АВТОР: <b>ВАТАШИ</b>",
-            ti: "Изменение", ta: "Анализ", bi: "Изменить видео", ba: "Анализировать",
-            q: "Качество:", f: "FPS:", s: "Вес:", c: "Страна:",
-            t1: "💡 Используйте <b>Topaz/Wink</b> для качества.",
-            t2: "📥 Загрузите видео для <b>инъекции данных</b>.",
-            t3: "🌐 Загрузите в TikTok через <b>браузер (ПК)</b>.",
-            ph: "Вставьте ссылку на TikTok..."
-        },
-        en: {
-            sub: "FREE TOOL / BY <b>WATASHI</b>",
-            ti: "Modify", ta: "Analyze", bi: "Modify Video", ba: "Analyze Link",
-            q: "Quality:", f: "FPS:", s: "Size:", c: "Country:",
-            t1: "💡 Use <b>Topaz/Wink</b> for quality.",
-            t2: "📥 Upload video for <b>data injection</b>.",
-            t3: "🌐 Upload to TikTok via <b>browser (PC)</b>.",
-            ph: "Paste TikTok link..."
+        let currentLang = 'ru';
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('author-text').innerHTML = translations[lang].author;
+            document.getElementById('rules').innerHTML = translations[lang].rules;
+            document.getElementById('action-btn').innerText = translations[lang].btn;
         }
-    };
 
-    function setLang(l) {
-        document.getElementById('btn-ru').classList.toggle('active', l==='ru');
-        document.getElementById('btn-en').classList.toggle('active', l==='en');
-        const d = langMap[l];
-        document.getElementById('sub').innerHTML = d.sub;
-        document.getElementById('btn-tab-i').innerText = d.ti;
-        document.getElementById('btn-tab-a').innerText = d.ta;
-        document.getElementById('btn-i-text').innerText = d.bi;
-        document.getElementById('btn-a-text').innerText = d.ba;
-        document.getElementById('l-q').innerText = d.q;
-        document.getElementById('l-f').innerText = d.f;
-        document.getElementById('l-s').innerText = d.s;
-        document.getElementById('l-c').innerText = d.c;
-        document.getElementById('t1').innerHTML = d.t1;
-        document.getElementById('t2').innerHTML = d.t2;
-        document.getElementById('t3').innerHTML = d.t3;
-        document.getElementById('tk-link').placeholder = d.ph;
-    }
+        // --- Обработка видео ---
+        function addLog(text) {
+            const consoleDiv = document.getElementById('console');
+            const entry = document.createElement('div');
+            entry.innerText = `> ${text}`;
+            consoleDiv.appendChild(entry);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
 
-    // 4. ЛОГИКА ИНЪЕКЦИИ
-    async function inject() {
-        const file = document.getElementById('vid-file').files[0];
-        if(!file) return alert("Выберите файл!");
-        const buf = await file.arrayBuffer();
-        const arr = new Uint8Array(buf);
-        let found = 0;
-        for(let i=0; i<arr.length-3; i++) {
-            if(arr[i]===0x65 && arr[i+1]===0x6c && arr[i+2]===0x73 && arr[i+3]===0x74) {
-                found++;
-                arr[i+8]=0x10; arr[i+9]=0x00; arr[i+10]=0x00; arr[i+11]=0x01;
+        async function processVideo() {
+            const input = document.getElementById('vid-input');
+            if (!input.files.length) return;
+
+            const file = input.files[0];
+            const wrapper = document.getElementById('p-wrapper');
+            const pBar = document.getElementById('p-bar');
+            const consoleDiv = document.getElementById('console');
+            
+            wrapper.style.display = 'block';
+            consoleDiv.innerHTML = '';
+            
+            const logs = translations[currentLang].logs;
+            const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+            addLog(logs[0]); pBar.style.width = '20%'; await sleep(600);
+            addLog(logs[1]); pBar.style.width = '40%'; await sleep(800);
+
+            try {
+                const buffer = await file.arrayBuffer();
+                const bytes = new Uint8Array(buffer);
+                let count = 0;
+
+                // Изменение байтов elst
+                for (let i = 0; i < bytes.length - 3; i++) {
+                    if (bytes[i] === 0x65 && bytes[i+1] === 0x6C && bytes[i+2] === 0x73 && bytes[i+3] === 0x74) {
+                        count++;
+                        bytes[i + 8] = 0x10; bytes[i + 9] = 0x00; bytes[i + 10] = 0x00; bytes[i + 11] = 0x01;
+                    }
+                }
+
+                addLog(logs[2]); pBar.style.width = '60%'; await sleep(500);
+                addLog(logs[3]); pBar.style.width = '80%'; await sleep(700);
+                addLog(`${logs[4]} ${count}`); await sleep(400);
+
+                if (count > 0) {
+                    const blob = new Blob([bytes], { type: "video/mp4" });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = file.name.replace(".mp4", "_60fps.mp4");
+                    link.click();
+                    pBar.style.width = '100%'; await sleep(300);
+                    addLog(logs[6]);
+                } else {
+                    addLog("No metadata atoms found.");
+                    pBar.style.width = '100%';
+                }
+            } catch (e) {
+                addLog("An error occurred during injection.");
             }
         }
-        if(found) {
-            const blob = new Blob([arr], {type:"video/mp4"});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = "WATASHI_FIX_" + file.name;
-            a.click();
-            alert("Готово! Видео пропатчено.");
-        } else { alert("Метаданные не найдены."); }
-    }
-
-    // 5. ЛОГИКА АНАЛИЗА
-    async function analyze() {
-        const link = document.getElementById('tk-link').value;
-        if(!link) return alert("Введите ссылку!");
-        document.getElementById('r-q').innerText = "...";
-        try {
-            const r = await fetch(`https://tiktok-info-production-c7c2.up.railway.app/get_info?link=${encodeURIComponent(link)}`);
-            const d = await r.json();
-            if(d.status === "success") {
-                document.getElementById('r-q').innerText = d.quality;
-                document.getElementById('r-f').innerText = d.fps;
-                document.getElementById('r-s').innerText = d.size;
-                document.getElementById('r-c').innerText = d.country;
-            }
-        } catch(e) { alert("Ошибка сервера или ссылка неверна."); }
-    }
-</script>
-
+    </script>
 </body>
 </html>
