@@ -4,50 +4,173 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WATASHI TOOL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #ff0000; --bg: #0d0d0d; --card: #1a1a1a; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .container { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 450px; text-align: center; border: 1px solid #333; position: relative; }
-        
-        /* Переключатель языка */
-        .lang-box { position: absolute; top: 15px; right: 15px; display: flex; gap: 5px; }
-        .lang-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); cursor: pointer; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: 0.3s; }
-        .lang-btn.active { background: var(--primary); color: #000; }
+        :root {
+            --primary: #ff0000;
+            --primary-glow: rgba(255, 0, 0, 0.4);
+            --bg: #050505;
+            --card: rgba(20, 20, 20, 0.8);
+        }
 
-        h1 { font-size: 2rem; letter-spacing: 5px; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
-        .subtitle { color: #666; font-size: 0.8rem; margin-bottom: 25px; }
+        body {
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* Анимированный фон */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a0000 0%, #050505 100%);
+            z-index: -1;
+        }
+
+        .container {
+            background: var(--card);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease-out; /* Для плавного движения мыши */
+            position: relative;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .lang-box { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #fff;
+            cursor: pointer;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            transition: 0.3s;
+        }
+        .lang-btn.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 6px;
+            margin: 0;
+            background: linear-gradient(to bottom, #fff, #666);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle { color: #555; font-size: 0.75rem; margin: 10px 0 30px; letter-spacing: 1px; }
         .subtitle b { color: var(--primary); }
 
-        .section-title { text-align: left; color: var(--primary); font-size: 0.75rem; font-weight: bold; margin: 20px 0 10px 5px; text-transform: uppercase; letter-spacing: 1px; }
-        input, button { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: none; box-sizing: border-box; font-size: 1rem; transition: 0.3s; }
-        input { background: #262626; color: #fff; border: 1px solid #333; }
-        input:focus { border-color: var(--primary); outline: none; }
-        
-        .main-btn { background: #fff; color: #000; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .main-btn:hover { background: var(--primary); color: #fff; transform: translateY(-2px); }
+        .section-title {
+            text-align: left;
+            color: var(--primary);
+            font-size: 0.7rem;
+            font-weight: 800;
+            margin: 25px 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.8;
+        }
 
-        .results { background: #111; padding: 15px; border-radius: 15px; margin-top: 10px; text-align: left; border: 1px solid #222; }
-        .res-item { display: flex; justify-content: space-between; margin: 8px 0; font-size: 0.9rem; color: #aaa; }
-        .res-item span:last-child { font-weight: bold; color: #fff; }
+        input, .main-btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-        .tips-box { margin-top: 25px; padding-top: 20px; border-top: 1px solid #333; text-align: left; font-size: 0.85rem; color: #999; line-height: 1.6; }
-        .tips-box b { color: var(--primary); }
+        input {
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 12px;
+        }
+
+        input:focus {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
+        }
+
+        .main-btn {
+            background: #fff;
+            color: #000;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .main-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 8px 25px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        .results {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 18px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .res-item { display: flex; justify-content: space-between; margin: 10px 0; font-size: 0.85rem; }
+        .res-item span:first-child { color: #777; }
+        .res-item span:last-child { color: #fff; font-weight: 600; }
+
+        .tips-box {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: left;
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.8;
+        }
+        .tips-box b { color: #999; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="bg-glow"></div>
+
+<div class="container" id="card">
     <div class="lang-box">
         <button class="lang-btn active" onclick="changeLang('ru')" id="btn-ru">RU</button>
         <button class="lang-btn" onclick="changeLang('en')" id="btn-en">EN</button>
     </div>
 
-    <h1 id="title">WATASHI TOOL</h1>
-    <p class="subtitle" id="sub">ВНИМАНИЕ: ИНСТРУМЕНТ <b>БЕСПЛАТНЫЙ</b>. АВТОР: <b>ВАТАШИ</b>.</p>
+    <h1 id="title">WATASHI</h1>
+    <p class="subtitle" id="sub">FREE TOOL / BY <b>WATASHI</b></p>
 
-    <div class="section-title" id="head-analyze">Анализ ссылки TikTok</div>
-    <input type="text" id="link" placeholder="Вставьте ссылку на TikTok...">
+    <div class="section-title" id="head-analyze">TikTok Analysis</div>
+    <input type="text" id="link" placeholder="Вставьте ссылку...">
     <button class="main-btn" onclick="analyze()" id="btn-analyze">Анализировать</button>
 
     <div class="results">
@@ -57,126 +180,10 @@
         <div class="res-item"><span id="lbl-c">Страна:</span> <span id="res-c">-</span></div>
     </div>
 
-    <div class="section-title" id="head-inject">Инъекция метаданных</div>
+    <div class="section-title" id="head-inject">Metadata Injection</div>
     <input type="file" id="vid-input" accept="video/mp4">
-    <button class="main-btn" onclick="startInjection()" id="btn-inject">Запустить инъекцию</button>
+    <button class="main-btn" onclick="startInjection()" id="btn-inject">Инъекция</button>
 
     <div class="tips-box">
         <p id="t1">💡 Используйте <b>Topaz/Wink</b> для качества.</p>
-        <p id="t2">📥 Загрузите видео для <b>инъекции данных</b>.</p>
-        <p id="t3">🌐 Загрузите в TikTok через <b>браузер (ПК)</b>.</p>
-    </div>
-</div>
-
-<script>
-    const langData = {
-        ru: {
-            sub: "ВНИМАНИЕ: ИНСТРУМЕНТ <b>БЕСПЛАТНЫЙ</b>. АВТОР: <b>ВАТАШИ</b>.",
-            h_analyze: "Анализ ссылки TikTok",
-            h_inject: "Инъекция метаданных",
-            btn_a: "Анализировать",
-            btn_i: "Запустить инъекцию",
-            q: "Качество:", f: "FPS:", s: "Вес:", c: "Страна:",
-            t1: "💡 Используйте <b>Topaz/Wink</b> для качества.",
-            t2: "📥 Загрузите видео для <b>инъекции данных</b>.",
-            t3: "🌐 Загрузите в TikTok через <b>браузер (ПК)</b>.",
-            placeholder: "Вставьте ссылку на TikTok...",
-            loading: "Загрузка...",
-            alert_link: "Введите ссылку!",
-            alert_file: "Выберите файл!"
-        },
-        en: {
-            sub: "ATTENTION: <b>FREE</b> TOOL. BY <b>WATASHI</b>.",
-            h_analyze: "TikTok Link Analysis",
-            h_inject: "Metadata Injection",
-            btn_a: "Analyze",
-            btn_i: "Start Injection",
-            q: "Quality:", f: "FPS:", s: "Size:", c: "Country:",
-            t1: "💡 Use <b>Topaz/Wink</b> for quality.",
-            t2: "📥 Upload video for <b>data injection</b>.",
-            t3: "🌐 Upload to TikTok via <b>browser (PC)</b>.",
-            placeholder: "Paste TikTok link here...",
-            loading: "Loading...",
-            alert_link: "Please enter a link!",
-            alert_file: "Please select a file!"
-        }
-    };
-
-    let currentLang = 'ru';
-
-    function changeLang(lang) {
-        currentLang = lang;
-        document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
-        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-        
-        const d = langData[lang];
-        document.getElementById('sub').innerHTML = d.sub;
-        document.getElementById('head-analyze').innerText = d.h_analyze;
-        document.getElementById('head-inject').innerText = d.h_inject;
-        document.getElementById('btn-analyze').innerText = d.btn_a;
-        document.getElementById('btn-inject').innerText = d.btn_i;
-        document.getElementById('lbl-q').innerText = d.q;
-        document.getElementById('lbl-f').innerText = d.f;
-        document.getElementById('lbl-s').innerText = d.s;
-        document.getElementById('lbl-c').innerText = d.c;
-        document.getElementById('t1').innerHTML = d.t1;
-        document.getElementById('t2').innerHTML = d.t2;
-        document.getElementById('t3').innerHTML = d.t3;
-        document.getElementById('link').placeholder = d.placeholder;
-    }
-
-    async function analyze() {
-        const url = document.getElementById('link').value;
-        if(!url) return alert(langData[currentLang].alert_link);
-        
-        document.getElementById('res-q').innerText = langData[currentLang].loading;
-        
-        try {
-            const server = "https://tiktok-info-production-c7c2.up.railway.app";
-            const res = await fetch(`${server}/get_info?link=${encodeURIComponent(url)}`);
-            const data = await res.json();
-            
-            if(data.status === "success") {
-                document.getElementById('res-q').innerText = data.quality;
-                document.getElementById('res-f').innerText = data.fps;
-                document.getElementById('res-s').innerText = data.size;
-                document.getElementById('res-c').innerText = data.country;
-            } else {
-                alert("Error!");
-            }
-        } catch(e) {
-            alert("Connection error!");
-        }
-    }
-
-    async function startInjection() {
-        const fileInput = document.getElementById('vid-input');
-        if (!fileInput.files.length) return alert(langData[currentLang].alert_file);
-
-        const file = fileInput.files[0];
-        const buf = await file.arrayBuffer();
-        const arr = new Uint8Array(buf);
-        let patchCount = 0;
-
-        for (let i = 0; i < arr.length - 3; i++) {
-            if (arr[i] === 0x65 && arr[i+1] === 0x6C && arr[i+2] === 0x73 && arr[i+3] === 0x74) {
-                patchCount++;
-                arr[i + 8] = 0x10; arr[i + 9] = 0x00; arr[i + 10] = 0x00; arr[i + 11] = 0x01;
-            }
-        }
-
-        if (patchCount > 0) {
-            const blob = new Blob([arr], { type: "video/mp4" });
-            const dlink = document.createElement("a");
-            dlink.href = URL.createObjectURL(blob);
-            dlink.download = "WATASHI_FIXED_" + file.name;
-            dlink.click();
-            alert(currentLang === 'ru' ? "Готово! Видео скачано." : "Done! Video downloaded.");
-        } else {
-            alert(currentLang === 'ru' ? "Метаданные не найдены." : "Metadata not found.");
-        }
-    }
-</script>
-
-</body>
-</html>
+        <p id="t2
