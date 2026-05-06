@@ -10,25 +10,28 @@
         body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         .container { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 450px; text-align: center; border: 1px solid #333; position: relative; }
         
-        /* Language Selector */
+        /* Переключатель языка */
         .lang-box { position: absolute; top: 15px; right: 15px; display: flex; gap: 5px; }
-        .lang-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); cursor: pointer; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+        .lang-btn { background: transparent; border: 1px solid var(--primary); color: var(--primary); cursor: pointer; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; transition: 0.3s; }
         .lang-btn.active { background: var(--primary); color: #000; }
 
-        h1 { font-size: 2rem; letter-spacing: 5px; color: #fff; margin-bottom: 5px; }
+        h1 { font-size: 2rem; letter-spacing: 5px; color: #fff; margin-bottom: 5px; text-transform: uppercase; }
         .subtitle { color: #666; font-size: 0.8rem; margin-bottom: 25px; }
         .subtitle b { color: var(--primary); }
 
-        input, button { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: none; box-sizing: border-box; font-size: 1rem; }
+        .section-title { text-align: left; color: var(--primary); font-size: 0.75rem; font-weight: bold; margin: 20px 0 10px 5px; text-transform: uppercase; letter-spacing: 1px; }
+        input, button { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: none; box-sizing: border-box; font-size: 1rem; transition: 0.3s; }
         input { background: #262626; color: #fff; border: 1px solid #333; }
-        .main-btn { background: #fff; color: #000; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .main-btn:hover { background: var(--primary); color: #fff; }
+        input:focus { border-color: var(--primary); outline: none; }
+        
+        .main-btn { background: #fff; color: #000; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .main-btn:hover { background: var(--primary); color: #fff; transform: translateY(-2px); }
 
-        .results { background: #111; padding: 15px; border-radius: 15px; margin-top: 20px; text-align: left; }
-        .res-item { display: flex; justify-content: space-between; margin: 8px 0; font-size: 0.9rem; }
-        .res-item span:last-child { font-weight: bold; }
+        .results { background: #111; padding: 15px; border-radius: 15px; margin-top: 10px; text-align: left; border: 1px solid #222; }
+        .res-item { display: flex; justify-content: space-between; margin: 8px 0; font-size: 0.9rem; color: #aaa; }
+        .res-item span:last-child { font-weight: bold; color: #fff; }
 
-        .tips-box { margin-top: 25px; padding-top: 20px; border-top: 1px solid #333; text-align: left; font-size: 0.85rem; color: #999; }
+        .tips-box { margin-top: 25px; padding-top: 20px; border-top: 1px solid #333; text-align: left; font-size: 0.85rem; color: #999; line-height: 1.6; }
         .tips-box b { color: var(--primary); }
     </style>
 </head>
@@ -43,8 +46,9 @@
     <h1 id="title">WATASHI TOOL</h1>
     <p class="subtitle" id="sub">ВНИМАНИЕ: ИНСТРУМЕНТ <b>БЕСПЛАТНЫЙ</b>. АВТОР: <b>ВАТАШИ</b>.</p>
 
+    <div class="section-title" id="head-analyze">Анализ ссылки TikTok</div>
     <input type="text" id="link" placeholder="Вставьте ссылку на TikTok...">
-    <button class="main-btn" onclick="analyze()" id="btn-text">АНАЛИЗИРОВАТЬ</button>
+    <button class="main-btn" onclick="analyze()" id="btn-analyze">Анализировать</button>
 
     <div class="results">
         <div class="res-item"><span id="lbl-q">Качество:</span> <span id="res-q">-</span></div>
@@ -52,6 +56,10 @@
         <div class="res-item"><span id="lbl-s">Вес:</span> <span id="res-s">-</span></div>
         <div class="res-item"><span id="lbl-c">Страна:</span> <span id="res-c">-</span></div>
     </div>
+
+    <div class="section-title" id="head-inject">Инъекция метаданных</div>
+    <input type="file" id="vid-input" accept="video/mp4">
+    <button class="main-btn" onclick="startInjection()" id="btn-inject">Запустить инъекцию</button>
 
     <div class="tips-box">
         <p id="t1">💡 Используйте <b>Topaz/Wink</b> для качества.</p>
@@ -64,30 +72,49 @@
     const langData = {
         ru: {
             sub: "ВНИМАНИЕ: ИНСТРУМЕНТ <b>БЕСПЛАТНЫЙ</b>. АВТОР: <b>ВАТАШИ</b>.",
-            btn: "АНАЛИЗИРОВАТЬ",
+            h_analyze: "Анализ ссылки TikTok",
+            h_inject: "Инъекция метаданных",
+            btn_a: "Анализировать",
+            btn_i: "Запустить инъекцию",
             q: "Качество:", f: "FPS:", s: "Вес:", c: "Страна:",
             t1: "💡 Используйте <b>Topaz/Wink</b> для качества.",
             t2: "📥 Загрузите видео для <b>инъекции данных</b>.",
             t3: "🌐 Загрузите в TikTok через <b>браузер (ПК)</b>.",
-            load: "Загрузка..."
+            placeholder: "Вставьте ссылку на TikTok...",
+            loading: "Загрузка...",
+            alert_link: "Введите ссылку!",
+            alert_file: "Выберите файл!"
         },
         en: {
             sub: "ATTENTION: <b>FREE</b> TOOL. BY <b>WATASHI</b>.",
-            btn: "ANALYZE",
+            h_analyze: "TikTok Link Analysis",
+            h_inject: "Metadata Injection",
+            btn_a: "Analyze",
+            btn_i: "Start Injection",
             q: "Quality:", f: "FPS:", s: "Size:", c: "Country:",
-            t1: "💡 Use <b>Topaz/Wink</b> for better quality.",
+            t1: "💡 Use <b>Topaz/Wink</b> for quality.",
             t2: "📥 Upload video for <b>data injection</b>.",
             t3: "🌐 Upload to TikTok via <b>browser (PC)</b>.",
-            load: "Loading..."
+            placeholder: "Paste TikTok link here...",
+            loading: "Loading...",
+            alert_link: "Please enter a link!",
+            alert_file: "Please select a file!"
         }
     };
 
+    let currentLang = 'ru';
+
     function changeLang(lang) {
+        currentLang = lang;
         document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
         document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        
         const d = langData[lang];
         document.getElementById('sub').innerHTML = d.sub;
-        document.getElementById('btn-text').innerText = d.btn;
+        document.getElementById('head-analyze').innerText = d.h_analyze;
+        document.getElementById('head-inject').innerText = d.h_inject;
+        document.getElementById('btn-analyze').innerText = d.btn_a;
+        document.getElementById('btn-inject').innerText = d.btn_i;
         document.getElementById('lbl-q').innerText = d.q;
         document.getElementById('lbl-f').innerText = d.f;
         document.getElementById('lbl-s').innerText = d.s;
@@ -95,16 +122,16 @@
         document.getElementById('t1').innerHTML = d.t1;
         document.getElementById('t2').innerHTML = d.t2;
         document.getElementById('t3').innerHTML = d.t3;
+        document.getElementById('link').placeholder = d.placeholder;
     }
 
     async function analyze() {
         const url = document.getElementById('link').value;
-        if(!url) return alert("Введите ссылку!");
+        if(!url) return alert(langData[currentLang].alert_link);
         
-        document.getElementById('res-q').innerText = "Загрузка...";
+        document.getElementById('res-q').innerText = langData[currentLang].loading;
         
         try {
-            // ТВОЯ ССЫЛКА НА RAILWAY
             const server = "https://tiktok-info-production-c7c2.up.railway.app";
             const res = await fetch(`${server}/get_info?link=${encodeURIComponent(url)}`);
             const data = await res.json();
@@ -115,10 +142,38 @@
                 document.getElementById('res-s').innerText = data.size;
                 document.getElementById('res-c').innerText = data.country;
             } else {
-                alert("Ошибка сервера!");
+                alert("Error!");
             }
         } catch(e) {
-            alert("Ошибка! Проверь, запущен ли Python на Railway.");
+            alert("Connection error!");
+        }
+    }
+
+    async function startInjection() {
+        const fileInput = document.getElementById('vid-input');
+        if (!fileInput.files.length) return alert(langData[currentLang].alert_file);
+
+        const file = fileInput.files[0];
+        const buf = await file.arrayBuffer();
+        const arr = new Uint8Array(buf);
+        let patchCount = 0;
+
+        for (let i = 0; i < arr.length - 3; i++) {
+            if (arr[i] === 0x65 && arr[i+1] === 0x6C && arr[i+2] === 0x73 && arr[i+3] === 0x74) {
+                patchCount++;
+                arr[i + 8] = 0x10; arr[i + 9] = 0x00; arr[i + 10] = 0x00; arr[i + 11] = 0x01;
+            }
+        }
+
+        if (patchCount > 0) {
+            const blob = new Blob([arr], { type: "video/mp4" });
+            const dlink = document.createElement("a");
+            dlink.href = URL.createObjectURL(blob);
+            dlink.download = "WATASHI_FIXED_" + file.name;
+            dlink.click();
+            alert(currentLang === 'ru' ? "Готово! Видео скачано." : "Done! Video downloaded.");
+        } else {
+            alert(currentLang === 'ru' ? "Метаданные не найдены." : "Metadata not found.");
         }
     }
 </script>
