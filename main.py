@@ -1,98 +1,47 @@
-// Безопасное обновление элементов
-function updateEl(id, text) {
-    const el = document.getElementById(id);
-    if (el) el.innerText = text;
-}
+import os
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import yt_dlp
 
-// ОСНОВНАЯ ФУНКЦИЯ ИНЪЕКЦИИ (ЗАЩИЩЕНА ОТ КРАШЕЙ)
-async function processVideo() {
-    const input = document.getElementById('vid-input');
-    if (!input || !input.files.length) return alert("Файл не выбран!");
-    
-    const wrapper = document.getElementById('p-wrapper');
-    const pBar = document.getElementById('p-bar');
-    const consoleBox = document.getElementById('console');
-    
-    if (wrapper) wrapper.style.display = 'block';
-    if (consoleBox) consoleBox.innerHTML = "> Подготовка памяти...";
-    if (pBar) pBar.style.width = "10%";
+app = Flask(__name__)
+CORS(app)
 
-    try {
-        const file = input.files[0];
-        const buffer = await file.arrayBuffer();
-        const bytes = new Uint8Array(buffer);
-        let count = 0;
+@app.route('/get_info', methods=['GET'])
+def get_tiktok_info():
+    video_url = request.args.get('link')
+    if not video_url:
+        return jsonify({"status": "error", "message": "No URL provided"}), 400
 
-        if (consoleBox) consoleBox.innerHTML += `<br>> Файл загружен: ${(file.size / (1024*1024)).toFixed(2)} MB`;
-
-        // Используем setTimeout, чтобы разгрузить поток и не крашнуть вкладку
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        // Безопасный цикл: останавливаемся за 12 байт до конца
-        const len = bytes.length - 12;
-        for (let i = 0; i < len; i++) {
-            // Ищем сигнатуру 'elst' (65 6c 73 74)
-            if (bytes[i] === 0x65 && bytes[i+1] === 0x6C && bytes[i+2] === 0x73 && bytes[i+3] === 0x74) {
-                count++;
-                // Модификация байтов для обхода алгоритмов сжатия
-                bytes[i + 8] = 0x10; 
-                bytes[i + 9] = 0x00; 
-                bytes[i + 10] = 0x00; 
-                bytes[i + 11] = 0x01;
-                
-                // Чтобы не зависало на огромных файлах, делаем микро-паузу каждые 500 найденных блоков
-                if (count % 500 === 0) await new Promise(r => setTimeout(r, 0));
-            }
-        }
-
-        if (pBar) pBar.style.width = "100%";
-        if (consoleBox) consoleBox.innerHTML += `<br>> Инъекция завершена! Найдено: ${count}`;
-
-        if (count > 0) {
-            const blob = new Blob([bytes], { type: "video/mp4" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = "WATASHI_FIX_" + file.name;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            if (consoleBox) consoleBox.innerHTML += `<br>> [SUCCESS] Файл отправлен на загрузку.`;
-        } else {
-            if (consoleBox) consoleBox.innerHTML += `<br>> [WARN] Метки 'elst' не найдены.`;
-            alert("Этот тип MP4 не содержит нужных метаданных для патча.");
-        }
-    } catch (err) {
-        console.error("CRASH PROTECT:", err);
-        alert("Произошла критическая ошибка. Попробуйте файл поменьше или закройте лишние вкладки.");
-        if (consoleBox) consoleBox.innerHTML += `<br>> [CRITICAL ERROR]`;
-    }
-}
-
-// ФУНКЦИЯ АНАЛИЗА (С ИСПРАВЛЕННОЙ СТРАНОЙ)
-async function analyzeVideo() {
-    const linkInput = document.getElementById('tk-link');
-    if (!linkInput || !linkInput.value) return;
-    
-    const fields = ['res-q', 'res-f', 'res-s', 'res-c'];
-    fields.forEach(id => updateEl(id, "..."));
-
-    try {
-        const res = await fetch(`https://tiktok-info-production-c7c2.up.railway.app/get_info?link=${encodeURIComponent(linkInput.value)}`);
-        const data = await res.json();
+    try:
+        ydl_opts = {'quiet': True, 'no_warnings': True, 'format': 'best'}
         
-        if (data.status === "success") {
-            updateEl('res-q', data.quality || "High");
-            updateEl('res-f', data.fps || "60");
-            updateEl('res-s', data.size || "-");
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(video_url, download=False)
             
-            // Проверка страны по всем возможным полям API
-            const country = data.country || data.region || data.author_region || (curLang === 'ru' ? "Скрыто" : "Hidden");
-            updateEl('res-c', country);
-        } else {
-            fields.forEach(id => updateEl(id, "Error"));
-        }
-    } catch (e) {
-        fields.forEach(id => updateEl(id, "-"));
-    }
-}
+            # Извлекаем страну/регион
+            country = info.get('location') or info.get('region') or info.get('country')
+            if not country and 'webpage_url_domain' in info:
+                # Если TikTok не дал страну, попробуем угадать по домену или оставить N/A
+                country = "Global/TikTok"
+
+            fps = info.get('fps')
+            if not fps and 'formats' in info:
+                fps = next((f.get('fps') for f in info['formats'] if f.get('fps')), 60)
+
+            filesize = info.get('filesize') or info.get('filesize_approx')
+            if not filesize and 'formats' in info:
+                filesize = next((f.get('filesize') or f.get('filesize_approx') for f in info['formats'] if f.get('filesize')), 0)
+            
+            return jsonify({
+                "status": "success",
+                "quality": f"{info.get('width', '?')}x{info.get('height', '?')}",
+                "fps": int(fps) if fps else 60,
+                "size": f"{round(filesize / 1048576, 2)} MB" if filesize else "Unknown",
+                "country": country if country else "International"
+            })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
