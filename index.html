@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WATASHI TOOL</title>
+    <title>Watashi Tool | Official</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #ff0000;
-            --primary-glow: rgba(255, 0, 0, 0.4);
-            --bg: #050505;
-            --card: rgba(20, 20, 20, 0.8);
+            --accent: #ff3333;
+            --bg: #030303;
+            --card: rgba(255, 255, 255, 0.04);
+            --text: #ffffff;
+            --transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
         }
 
         body {
-            background: var(--bg);
-            color: #fff;
-            font-family: 'Inter', sans-serif;
             margin: 0;
+            background: var(--bg);
+            background-image: radial-gradient(circle at center, #1e0808 0%, #030303 100%);
+            background-attachment: fixed;
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,164 +29,106 @@
             perspective: 1000px;
         }
 
-        /* Анимированный фон */
-        .bg-glow {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1a0000 0%, #050505 100%);
-            z-index: -1;
-        }
-
         .container {
-            background: var(--card);
-            backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 24px;
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
+            padding: 40px;
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            transition: transform 0.1s ease-out; /* Для плавного движения мыши */
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8);
+            transition: transform 0.1s ease-out;
             position: relative;
-            animation: fadeIn 1s ease-out;
+            animation: slideUp 0.8s var(--transition);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .lang-box { position: absolute; top: 20px; right: 20px; display: flex; gap: 8px; }
+        /* Language Switcher */
+        .lang-box { position: absolute; top: 25px; right: 25px; display: flex; gap: 8px; }
         .lang-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 51, 51, 0.2);
             color: #fff;
             cursor: pointer;
-            padding: 5px 12px;
-            border-radius: 8px;
+            padding: 6px 12px;
+            border-radius: 10px;
             font-size: 11px;
             font-weight: 800;
-            transition: 0.3s;
+            transition: var(--transition);
         }
-        .lang-btn.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+        .lang-btn.active { 
+            background: var(--accent); 
+            border-color: var(--accent); 
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.3);
+            color: #000;
+        }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 800;
-            letter-spacing: 6px;
+            letter-spacing: -1px;
             margin: 0;
-            background: linear-gradient(to bottom, #fff, #666);
+            background: linear-gradient(180deg, #fff 0%, #888 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .subtitle { color: #555; font-size: 0.75rem; margin: 10px 0 30px; letter-spacing: 1px; }
-        .subtitle b { color: var(--primary); }
+        .subtitle { color: #666; font-size: 0.8rem; margin: 8px 0 30px; text-transform: uppercase; letter-spacing: 2px; }
+        .subtitle b { color: var(--accent); }
 
         .section-title {
             text-align: left;
-            color: var(--primary);
-            font-size: 0.7rem;
-            font-weight: 800;
-            margin: 25px 0 10px;
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin: 25px 0 12px 5px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.8;
+            letter-spacing: 1.5px;
+            opacity: 0.9;
         }
 
         input, .main-btn {
             width: 100%;
-            padding: 16px;
-            border-radius: 14px;
+            padding: 18px;
+            border-radius: 16px;
             border: none;
             box-sizing: border-box;
-            font-size: 0.95rem;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1rem;
+            transition: var(--transition);
         }
 
         input {
             background: rgba(255, 255, 255, 0.03);
             color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             margin-bottom: 12px;
         }
 
         input:focus {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--accent);
             outline: none;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.1);
+            box-shadow: 0 0 25px rgba(255, 51, 51, 0.1);
         }
 
         .main-btn {
-            background: #fff;
-            color: #000;
+            background: #ffffff;
+            color: #000000;
             font-weight: 700;
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 5px;
         }
 
         .main-btn:hover {
-            background: var(--primary);
+            background: var(--accent);
             color: #fff;
-            box-shadow: 0 8px 25px var(--primary-glow);
-            transform: translateY(-2px);
-        }
-
-        .results {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 18px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .res-item { display: flex; justify-content: space-between; margin: 10px 0; font-size: 0.85rem; }
-        .res-item span:first-child { color: #777; }
-        .res-item span:last-child { color: #fff; font-weight: 600; }
-
-        .tips-box {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: left;
-            font-size: 0.8rem;
-            color: #666;
-            line-height: 1.8;
-        }
-        .tips-box b { color: #999; }
-    </style>
-</head>
-<body>
-
-<div class="bg-glow"></div>
-
-<div class="container" id="card">
-    <div class="lang-box">
-        <button class="lang-btn active" onclick="changeLang('ru')" id="btn-ru">RU</button>
-        <button class="lang-btn" onclick="changeLang('en')" id="btn-en">EN</button>
-    </div>
-
-    <h1 id="title">WATASHI</h1>
-    <p class="subtitle" id="sub">FREE TOOL / BY <b>WATASHI</b></p>
-
-    <div class="section-title" id="head-analyze">TikTok Analysis</div>
-    <input type="text" id="link" placeholder="Вставьте ссылку...">
-    <button class="main-btn" onclick="analyze()" id="btn-analyze">Анализировать</button>
-
-    <div class="results">
-        <div class="res-item"><span id="lbl-q">Качество:</span> <span id="res-q">-</span></div>
-        <div class="res-item"><span id="lbl-f">FPS:</span> <span id="res-f">-</span></div>
-        <div class="res-item"><span id="lbl-s">Вес:</span> <span id="res-s">-</span></div>
-        <div class="res-item"><span id="lbl-c">Страна:</span> <span id="res-c">-</span></div>
-    </div>
-
-    <div class="section-title" id="head-inject">Metadata Injection</div>
-    <input type="file" id="vid-input" accept="video/mp4">
-    <button class="main-btn" onclick="startInjection()" id="btn-inject">Инъекция</button>
-
-    <div class="tips-box">
-        <p id="t1">💡 Используйте <b>Topaz/Wink</b> для качества.</p>
-        <p id="t2
+            transform: translateY(-3px);
+            box-shadow:
