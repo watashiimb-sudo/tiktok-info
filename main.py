@@ -13,41 +13,31 @@ def get_tiktok_info():
         return jsonify({"status": "error", "message": "No URL provided"}), 400
 
     try:
-        # Максимально подробный сбор данных
-        ydl_opts = {
-            'quiet': True,
-            'no_warnings': True,
-            'format': 'bestvideo/best',
-            'check_formats': True
-        }
+        ydl_opts = {'quiet': True, 'no_warnings': True, 'format': 'best'}
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
             
-            # Ищем FPS везде, где только можно
-            fps = info.get('fps')
-            
-            # Если в главном поле пусто, лезем в список форматов
-            if not fps and 'formats' in info:
-                # Фильтруем форматы, у которых есть число FPS, и берем самое высокое
-                final_fps = f"{int(fps)}" if fps else "60"is not None]
-                if fps_list:
-                    fps = max(fps_list)
+            # Извлекаем страну/регион
+            country = info.get('location') or info.get('region') or info.get('country')
+            if not country and 'webpage_url_domain' in info:
+                # Если TikTok не дал страну, попробуем угадать по домену или оставить N/A
+                country = "Global/TikTok"
 
-            # То же самое для размера файла
+            fps = info.get('fps')
+            if not fps and 'formats' in info:
+                fps = next((f.get('fps') for f in info['formats'] if f.get('fps')), 60)
+
             filesize = info.get('filesize') or info.get('filesize_approx')
             if not filesize and 'formats' in info:
-                filesize = next((f.get('filesize') or f.get('filesize_approx') for f in info['formats'] if f.get('filesize') or f.get('filesize_approx')), 0)
+                filesize = next((f.get('filesize') or f.get('filesize_approx') for f in info['formats'] if f.get('filesize')), 0)
             
-            # Подготавливаем красивые значения
-            final_fps = f"{int(fps)}" if fps else "60 (fps)"
-            final_size = f"{round(filesize / 1048576, 2)} MB" if filesize else "Unknown"
-
             return jsonify({
                 "status": "success",
                 "quality": f"{info.get('width', '?')}x{info.get('height', '?')}",
-                "fps": final_fps,
-                "size": final_size
+                "fps": int(fps) if fps else 60,
+                "size": f"{round(filesize / 1048576, 2)} MB" if filesize else "Unknown",
+                "country": country if country else "International"
             })
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
